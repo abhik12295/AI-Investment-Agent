@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def render_movers(movers):
     for cap, df in movers.items():
         st.markdown(f"### {cap.capitalize()} Cap")
@@ -16,3 +17,5 @@ def render_movers(movers):
 
 def render_etfs(df):
     st.dataframe(df)
+
+

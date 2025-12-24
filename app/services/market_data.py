@@ -6,7 +6,7 @@ import yaml
 
 @st.cache_data(ttl=86400)
 def get_daily_movers():
-    # 1️⃣ Market calendar check
+    # Market calendar check
     nyse = get_calendar("NYSE")
     today = pd.Timestamp.now(tz="US/Eastern").date()
 
@@ -14,7 +14,7 @@ def get_daily_movers():
     if valid_days.empty:
         return {}
 
-    # 2️⃣ Load stock universe (Phase 1 safe)
+    # Load stock universe (Phase 1 safe)
     with open("data/universe.yaml") as f:
         symbols = yaml.safe_load(f)
 
@@ -26,6 +26,7 @@ def get_daily_movers():
             info = t.info
 
             if "marketCap" not in info:
+                print(f"Skipping {symbol} due to missing market cap")
                 continue
 
             hist = t.history(period="2d")
@@ -50,7 +51,7 @@ def get_daily_movers():
     if df.empty:
         return {}
 
-    # 3️⃣ Market cap segmentation
+    # Market cap segmentation
     large = df[df.market_cap > 10e9]
     mid = df[(df.market_cap > 2e9) & (df.market_cap <= 10e9)]
     small = df[df.market_cap <= 2e9]
